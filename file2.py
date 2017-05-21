@@ -1,0 +1,397 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'untitled2.ui'
+#
+# Created by: PyQt4 UI code generator 4.12
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtGui ,QtCore
+import matplotlib as mpl
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+import sys
+import toLatex
+import m
+import pexpect
+
+try:
+	_fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+	def _fromUtf8(s):
+		return s
+
+try:
+	_encoding = QtGui.QApplication.UnicodeUTF8
+	def _translate(context, text, disambig):
+		return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+	def _translate(context, text, disambig):
+		return QtGui.QApplication.translate(context, text, disambig)
+
+# import matplotlib
+# matplotlib.rcParams['mathtext.fontset'] = 'stix'
+# matplotlib.rcParams['font.family'] = 'STIXGeneral'
+
+def mathTex_to_QPixmap(mathTex, fs):
+
+	#---- set up a mpl figure instance ----
+
+	fig = mpl.figure.Figure()
+	fig.patch.set_facecolor('none')
+	fig.set_canvas(FigureCanvasAgg(fig))
+	renderer = fig.canvas.get_renderer()
+
+	#---- plot the mathTex expression ----
+
+	ax = fig.add_axes([0, 0, 1, 1])
+	ax.axis('off')
+	ax.patch.set_facecolor('none')
+	t = ax.text(0, 0, mathTex, ha='left', va='bottom', fontsize=fs)
+
+	#---- fit figure size to text artist ----
+
+	fwidth, fheight = fig.get_size_inches()
+	fig_bbox = fig.get_window_extent(renderer)
+
+	text_bbox = t.get_window_extent(renderer)
+
+	tight_fwidth = text_bbox.width * fwidth / fig_bbox.width
+	tight_fheight = text_bbox.height * fheight / fig_bbox.height
+
+	fig.set_size_inches(tight_fwidth, tight_fheight)
+
+	#---- convert mpl figure to QPixmap ----
+
+	buf, size = fig.canvas.print_to_buffer()
+	qimage = QtGui.QImage.rgbSwapped(QtGui.QImage(buf, size[0], size[1],
+												  QtGui.QImage.Format_ARGB32))
+	qpixmap = QtGui.QPixmap(qimage)
+
+	return qpixmap
+
+#Form step 1
+class Ui_Form(object):
+	def setupUi(self, Form):
+		Form.setObjectName(_fromUtf8("Form"))
+		Form.resize(754, 555)
+		Form.setStyleSheet(_fromUtf8("background-color:  rgb(255, 255, 255);\n"))
+		self.frame = QtGui.QFrame(Form)
+		self.frame.setGeometry(QtCore.QRect(0, 70, 751, 221))
+		self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
+		self.frame.setFrameShadow(QtGui.QFrame.Raised)
+		self.frame.setObjectName(_fromUtf8("frame"))
+		self.gridLayoutWidget = QtGui.QWidget(self.frame)
+		self.gridLayoutWidget.setGeometry(QtCore.QRect(9, 50, 731, 151))
+		self.gridLayoutWidget.setObjectName(_fromUtf8("gridLayoutWidget"))
+		self.gridLayout = QtGui.QGridLayout(self.gridLayoutWidget)
+		self.gridLayout.setMargin(0)
+		self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+		self.pushButton_2 = QtGui.QPushButton(self.gridLayoutWidget)
+		self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
+		self.gridLayout.addWidget(self.pushButton_2, 1, 1, 1, 1)
+		self.pushButton_3 = QtGui.QPushButton(self.gridLayoutWidget)
+		self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
+		self.gridLayout.addWidget(self.pushButton_3, 1, 2, 1, 1)
+		self.pushButton = QtGui.QPushButton(self.gridLayoutWidget)
+		self.pushButton.setObjectName(_fromUtf8("pushButton"))
+		self.gridLayout.addWidget(self.pushButton, 1, 0, 1, 1)
+		self.pushButton_4 = QtGui.QPushButton(self.gridLayoutWidget)
+		self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
+		self.gridLayout.addWidget(self.pushButton_4, 1, 3, 1, 1)
+		self.label = QtGui.QLabel(self.gridLayoutWidget)
+		self.label.setObjectName(_fromUtf8("label"))
+		self.gridLayout.addWidget(self.label, 0, 0, 1, 1,QtCore.Qt.AlignHCenter)
+		self.label_2 = QtGui.QLabel(self.gridLayoutWidget)
+		self.label_2.setObjectName(_fromUtf8("label_2"))
+		self.gridLayout.addWidget(self.label_2, 0, 1, 1, 1,QtCore.Qt.AlignHCenter)
+		self.label_3 = QtGui.QLabel(self.gridLayoutWidget)
+		self.label_3.setObjectName(_fromUtf8("label_3"))
+		self.gridLayout.addWidget(self.label_3, 0, 2, 1, 1,QtCore.Qt.AlignHCenter)
+		self.label_4 = QtGui.QLabel(self.gridLayoutWidget)
+		self.label_4.setObjectName(_fromUtf8("label_4"))
+		self.gridLayout.addWidget(self.label_4, 0, 3, 1, 1,QtCore.Qt.AlignHCenter)
+		##
+		self.pushButton.setStyleSheet(_fromUtf8("background-color: black;color:white;"))
+		self.pushButton_2.setStyleSheet(_fromUtf8("background-color: black;color:white;"))
+		self.pushButton_3.setStyleSheet(_fromUtf8("background-color: black;color:white;"))
+		self.pushButton_4.setStyleSheet(_fromUtf8("background-color: black;color:white;"))
+		##
+		s = r'$'+toLatex.py2tex("(a*x**2+b*x+c)/(d*x+e)")+'$' #add
+		self.label.setPixmap(QtGui.QPixmap(mathTex_to_QPixmap(s,15))) #add
+		s = r'$'+toLatex.py2tex("(a*x+b)/(c*x+d)")+'$'
+		self.label_2.setPixmap(QtGui.QPixmap(mathTex_to_QPixmap(s,15)))
+		s = r'$'+toLatex.py2tex("a*x**3+b*x**2+c*x+d")+'$' #add
+		self.label_3.setPixmap(QtGui.QPixmap(mathTex_to_QPixmap(s,10))) #add
+		s = r'$'+toLatex.py2tex("a*x**4+b*x**2+c")+'$'
+		self.label_4.setPixmap(QtGui.QPixmap(mathTex_to_QPixmap(s,10)))
+		##
+		self.pushButton.clicked.connect(self.showdialog)
+		##
+		self.retranslateUi(Form)
+		QtCore.QMetaObject.connectSlotsByName(Form)
+
+	def retranslateUi(self, Form):
+		
+		Form.setWindowTitle(_translate("Form", "Form", None))
+		self.pushButton_3.setText(_translate("Form", "Select", None))
+		self.pushButton_4.setText(_translate("Form", "Select", None))
+		self.pushButton_2.setText(_translate("Form", "Select", None))
+		self.pushButton.setText(_translate("Form", "Select", None))
+	#run dialog
+	def showdialog(self):
+		Form = QtGui.QDialog()
+		ui = Ui_Dialog()
+		ui.setupUi(Form)
+		Form.show()
+		Form.exec_()
+#form dialog	
+class Ui_Dialog(object):
+	def setupUi(self, Dialog):
+		Dialog.setObjectName(_fromUtf8("Dialog"))
+		Dialog.resize(508, 166)
+		Dialog.setStyleSheet(_fromUtf8("background-color:  rgb(255, 255, 255);"))
+		self.buttonBox = QtGui.QDialogButtonBox(Dialog)
+		self.buttonBox.setGeometry(QtCore.QRect(100, 110, 351, 32))
+		self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+		self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+		self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
+		self.gridLayoutWidget = QtGui.QWidget(Dialog)
+		self.gridLayoutWidget.setGeometry(QtCore.QRect(60, 20, 361, 76))
+		self.gridLayoutWidget.setObjectName(_fromUtf8("gridLayoutWidget"))
+		self.gridLayout = QtGui.QGridLayout(self.gridLayoutWidget)
+		self.gridLayout.setMargin(0)
+		self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+		self.lineEdit = QtGui.QLineEdit(self.gridLayoutWidget)
+		self.lineEdit_2 = QtGui.QLineEdit(self.gridLayoutWidget)
+		self.lineEdit_3 = QtGui.QLineEdit(self.gridLayoutWidget)
+		self.lineEdit_4 = QtGui.QLineEdit(self.gridLayoutWidget)
+		self.lineEdit_5 = QtGui.QLineEdit(self.gridLayoutWidget)
+		self.lineEdit_5.setObjectName(_fromUtf8("lineEdit_5"))
+		self.gridLayout.addWidget(self.lineEdit_5, 0, 4, 1, 1)
+		
+		self.lineEdit_2.setObjectName(_fromUtf8("lineEdit_2"))
+		self.gridLayout.addWidget(self.lineEdit_2, 0, 1, 1, 1)
+		
+		self.lineEdit.setStyleSheet(_fromUtf8("border-color: black;"))
+		self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
+		self.gridLayout.addWidget(self.lineEdit, 0, 0, 1, 1)
+		
+		self.lineEdit_3.setObjectName(_fromUtf8("lineEdit_3"))
+		self.gridLayout.addWidget(self.lineEdit_3, 0, 2, 1, 1)
+		
+		self.lineEdit_4.setStyleSheet(_fromUtf8("border-color: black;"))
+		self.lineEdit_4.setObjectName(_fromUtf8("lineEdit_4"))
+		self.gridLayout.addWidget(self.lineEdit_4, 0, 3, 1, 1)
+		self.label = QtGui.QLabel(self.gridLayoutWidget)
+		self.label.setObjectName(_fromUtf8("label"))
+		self.gridLayout.addWidget(self.label, 1, 0, 1, 1, QtCore.Qt.AlignHCenter)
+		self.label_2 = QtGui.QLabel(self.gridLayoutWidget)
+		self.label_2.setObjectName(_fromUtf8("label_2"))
+		self.gridLayout.addWidget(self.label_2, 1, 1, 1, 1, QtCore.Qt.AlignHCenter)
+		self.label_3 = QtGui.QLabel(self.gridLayoutWidget)
+		self.label_3.setObjectName(_fromUtf8("label_3"))
+		self.gridLayout.addWidget(self.label_3, 1, 2, 1, 1, QtCore.Qt.AlignHCenter)
+		self.label_4 = QtGui.QLabel(self.gridLayoutWidget)
+		self.label_4.setObjectName(_fromUtf8("label_4"))
+		self.gridLayout.addWidget(self.label_4, 1, 3, 1, 1, QtCore.Qt.AlignHCenter)
+		self.label_5 = QtGui.QLabel(self.gridLayoutWidget)
+		self.label_5.setStyleSheet(_fromUtf8("border-color: black;"))
+		self.label_5.setObjectName(_fromUtf8("label_5"))
+		self.gridLayout.addWidget(self.label_5, 1, 4, 1, 1, QtCore.Qt.AlignHCenter)
+
+		self.retranslateUi(Dialog)
+		QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), Dialog.accept)
+		QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), Dialog.reject)
+		QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+		self.buttonBox.accepted.connect(self.f1)
+		# self.buttonBox.rejected.connect(self.f2)
+
+		self.buttonBox.setStyleSheet(_fromUtf8("background-color: black;color:white;"))
+
+	def retranslateUi(self, Dialog):
+		Dialog.setWindowTitle(_translate("Dialog", "Dialog", None))
+		self.label.setText(_translate("Dialog", "a", None))
+		self.label_2.setText(_translate("Dialog", "b", None))
+		self.label_3.setText(_translate("Dialog", "c", None))
+		self.label_4.setText(_translate("Dialog", "d", None))
+		self.label_5.setText(_translate("Dialog", "e", None))
+	#event click OK	
+	def f1(self):
+		l = []
+		if not self.lineEdit.text().isEmpty():
+			shots = int(self.lineEdit.text())
+			if not isclose(shots,0):
+				l.append(shots)
+		if not self.lineEdit_2.text().isEmpty():
+			shots = int(self.lineEdit_2.text())
+			l.append(shots)
+		if not self.lineEdit_3.text().isEmpty():
+			shots = int(self.lineEdit_3.text())
+			l.append(shots)
+		if not self.lineEdit_4.text().isEmpty():
+			shots = int(self.lineEdit_4.text())
+			if not isclose(shots,0):
+				l.append(shots)
+		if not self.lineEdit_5.text().isEmpty():
+			shots = int(self.lineEdit_5.text())
+			l.append(shots)
+		if len(l) < 5:
+			print "Input again."
+		else:
+			exe(l)
+
+MW = "/home/rues/maple2016/bin/maple -tu"
+def maple(X):
+	child = pexpect.spawn(MW)
+	child.expect('#--')
+	child.sendline(X)
+	child.expect('#--')
+	out = child.before
+	out = out[out.find(';')+1:].strip()
+	out = ''.join(out.split('\r\n'))
+	return out
+
+#run after click ok
+def exe(l):
+	s = '(('+str(l[0])+')*x^2+('+str(l[1])+')*x+('+str(l[2])+'))/(('+str(l[3])+')*x+('+str(l[4])+'))' #y = (x^2+x+1)/(x+1)
+	par1 = maple(s+';') #loai bo so 1
+	par1 = par1.replace("^","**") #chuyen ve python
+	listGui2 = [] #tao mot mang de luu cac Latex
+	par1 = r'$y='+toLatex.py2tex(par1)+r'$'
+
+	listGui2.append(par1) #0
+
+	
+	# par = -l[4]*1.0/l[3] #-e/d
+	par_0 = toLatex.py2tex(maple('solve(('+str(l[3])+')*x+('+str(l[4])+'));'))
+	par1 = r'$R\backslash\left\{'+par_0+r'\right\}$'
+	listGui2.append(par1)
+	#connect 
+	
+	X = 'r:=rem('+str(l[0])+'*x^2+('+str(l[1])+')*x+('+str(l[2])+'),'+str(l[3])+'*x+('+str(l[4])+'),x,\'q\'):q;'
+	par1 = maple(X) #get q
+	par1 = par1.replace("^","**")
+	
+	par2 = maple("rem("+str(l[0])+"*x^2+("+str(l[1])+")*x+("+str(l[2])+"),"+str(l[3])+"*x+("+str(l[4])+"),x,\'q\')/("+str(l[3])+"*x+("+str(l[4])+")):simplify(%);")
+
+	par3 = r'$y='+toLatex.py2tex(par1)+r'$' #phan nguyen
+	par1 = r'$y='+toLatex.py2tex(par1)+r'+'+toLatex.py2tex(par2)+r'$'
+	par4 = r'$\lim_{x\to\infty}('+toLatex.py2tex(par2)+r')=0$' #phan du
+	listGui2.append(par1) #2
+
+	par1 = r'$\lim_{x\to -\infty }y=-\infty$'
+	listGui2.append(par1) #3
+	par1 = r'$\lim_{x\to+\infty }y=+\infty$'
+	listGui2.append(par1) #4
+
+
+	par1 = r'$\lim_{x\to('+par_0+r')^{-} }y=-\infty$'
+	listGui2.append(par1) #5
+	par1 = r'$\lim_{x\to('+par_0+r')^{+} }y=+\infty$'
+	listGui2.append(par1) #6
+	par1 = r'$x='+par_0+r'$'
+	listGui2.append(par1) #7
+	par1 = r'$x\to('+par_0+r')^{-}$'
+	listGui2.append(par1) #8
+	par1 = r'$x\to('+par_0+r')^{+}$'
+	listGui2.append(par1) #9
+
+	listGui2.append(par4) #10
+	listGui2.append(par3) #11
+
+	par1 = maple("simplify(diff("+s+",x));")
+	par2 = par1.split(")/") # par2:=[(x^2+x+1,(x+1)] missing ')'
+	par1 = par1.replace("^","**")
+	par2 = par2[0]+')' #par2 := (x^2+x+1)
+	par2 = maple('solve('+par2+');')
+	par2 = par2.split(',')
+	par3 = maple('simplify('+par2[0]+');')
+	par4 = maple('simplify('+par2[1]+');')
+
+	par1 = r'$'+toLatex.py2tex(par1)+r'$'
+	listGui2.append(par1) #12
+	#giai phuogn trinh dao ham
+	if par3.find("I") == -1:#neu phuong trinh co nghiem
+		if par3.find("^(1/2)") != -1: #nghiem co chua dau can
+			par3 = par3.replace("^(1/2)","")
+			j =len(par3)
+			j=j-1
+			while '0'<=par3[j]<='9':
+				j=j-1
+			par3 = par3[:j+1]+'sqrt('+par3[j+1:]+')'
+		par3 = r'$'+toLatex.py2tex(par3)+r'$'
+		listGui2.append(par3) #13
+
+		if par4.find("^(1/2)") != -1:
+			par4 = par4.replace("^(1/2)","")
+			j =len(par4)
+			j=j-1
+			while '0'<=par4[j]<='9':
+				j=j-1
+			par4 = par4[:j+1]+'sqrt('+par4[j+1:]+')'
+		par4 = r'$'+toLatex.py2tex(par4)+r'$'
+		listGui2.append(par4) #14
+	else :
+		par3 = par3.replace("^(1/2)","")
+		j =len(par3)
+		j=j-1
+		while '0'<=par3[j]<='9':
+			j=j-1
+		par3 = par3[:j+1]+'sqrt('+par3[j+1:]+')'
+		par3 = r'$'+toLatex.py2tex(par3)+r'$'
+		listGui2.append(par3) #13
+
+		par4 = par4.replace("^(1/2)","")
+		j =len(par4)
+		j=j-1
+		while '0'<=par4[j]<='9':
+			j=j-1
+		par4 = par4[:j+1]+'sqrt('+par4[j+1:]+')'
+		par4 = r'$'+toLatex.py2tex(par4)+r'$'
+		listGui2.append(par4) #14
+
+	content = r'''
+$\star$Khảo sát và vẽ đồ thị của hàm số: 
+{0}
+$\star$Hàm số đã cho có tập xác định là {1}
+$\star$Sự biến thiên của hàm số:
+$\star$Ta viết hàm số đã cho dưới dạng {2}
+$\star$Ta có 
+{3} và {4}
+$\star$Vì {5} và {6} nên đường thẳng {7} là đường thẳng 
+tiệm cận đứng của đồ thị hàm số đã cho khi {8} và khi {9}
+$\star$Vì {10} nên đường thẳng {11} là tiệm cận xiên của
+ đồ thị hàm số đã cho khi $x\to+\infty$ và $x\to-\infty$
+$\star$Bảng biến thiên:
+$\star$Ta có: y'={12}
+	$y'=0 \Leftrightarrow$ x={13} hoặc x={14}
+'''.format(listGui2[0],listGui2[1],listGui2[2],listGui2[3],listGui2[4],listGui2[5],listGui2[6],\
+listGui2[7],listGui2[8],listGui2[9],listGui2[10],listGui2[11],listGui2[12],listGui2[13],listGui2[14])
+	r.hideF1()
+	r.setUI2(mathTex_to_QPixmap(_translate("Form",content,None),13))
+class MainWindows(object):
+	def run(self):
+		self.app = QtGui.QApplication(sys.argv)
+		self.F = QtGui.QWidget()
+		self.ui = Ui_Form()
+		self.ui.setupUi(self.F)
+		self.F2 = QtGui.QWidget()
+		self.ui2 = m.Ui_Form()
+		self.ui2.setupUi(self.F2)
+
+		self.F.show()
+	def setUI2(self,k):
+		self.ui2.set(k)
+	def hideF1(self):
+		self.F.hide()
+		self.F2.show()
+	def getapp(self):
+		return self.app
+def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
+	return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+
+if __name__ == "__main__":
+	r = MainWindows()
+	r.run()
+	sys.exit(r.getapp().exec_())
