@@ -13,7 +13,8 @@ import toLatex
 import m
 import pexpect
 import thread
-import demo
+from paint import paintEvent
+from replace2sqrt import re2sqrt
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -204,15 +205,8 @@ class Ui_Dialog(object):
 		if len(l) < 5:
 			print "Input again."
 		else:
-			# self.loading()
 			exe(l)
 			
-# def loading():
-# 	F = QtGui.QWidget()
-# 	ui = demo.Ui_Form()
-# 	ui.setupUi(F)
-# 	F.show()
-# 	ui.set()
 MW = "/home/rues/maple2016/bin/maple -tu"
 def maple(X):
 	child = pexpect.spawn(MW)
@@ -226,15 +220,17 @@ def maple(X):
 
 #run after click ok
 def exe(l):
-	# try:
-	# 	thread.start_new_thread(loading,())
-	# except:
-	# 	print "Error: unable to start thread"
+
 	r.hideF1()
+	if l[0] > 0:
+		style_g = 1
+	elif l[0] < 0:
+		style_g = 2
 	s = '(('+str(l[0])+')*x^2+('+str(l[1])+')*x+('+str(l[2])+'))/(('+str(l[3])+')*x+('+str(l[4])+'))' #y = (x^2+x+1)/(x+1)
 	par1 = maple(s+';') #loai bo so 1
 	par1 = par1.replace("^","**") #chuyen ve python
 	listGui2 = [] #tao mot mang de luu cac Latex
+	listGui3 = []
 	par1 = r'$y='+toLatex.py2tex(par1)+r'$'
 
 	listGui2.append(par1) #0
@@ -242,8 +238,9 @@ def exe(l):
 	
 	# par = -l[4]*1.0/l[3] #-e/d
 	par_0 = toLatex.py2tex(maple('solve(('+str(l[3])+')*x+('+str(l[4])+'));'))
+	listGui3.append(r'$'+par_0+r'$') #GUI #1
 	par1 = r'$R\backslash\left\{'+par_0+r'\right\}$'
-	listGui2.append(par1)
+	listGui2.append(par1) #1
 	#connect 
 	
 	X = 'r:=rem('+str(l[0])+'*x^2+('+str(l[1])+')*x+('+str(l[2])+'),'+str(l[3])+'*x+('+str(l[4])+'),x,\'q\'):q;'
@@ -283,33 +280,37 @@ def exe(l):
 	par2 = par2[0]+')' #par2 := (x^2+x+1)
 	par2 = maple('solve('+par2+');')
 	par2 = par2.split(',')
-	par3 = maple('simplify('+par2[0]+');')
-	par4 = maple('simplify('+par2[1]+');')
+	par3 = maple('simplify('+par2[0]+');') #nghiem 1
+	par4 = maple('simplify('+par2[1]+');') #nghiem 2
+	# x1,x2 -> y(x)
+	par5 = maple("x:="+par3+":expand("+s+");")
+	par5 = re2sqrt(par5)
+	par5 = r'$'+toLatex.py2tex(par5)+r'$'
 
+	listGui3.append(par5) #GUI3 #2
+	par5 = maple("x:="+par4+":expand("+s+");")
+	par5 = re2sqrt(par5)
+	par5 = r'$'+toLatex.py2tex(par5)+r'$'
+	listGui3.append(par5) #GUI3 #3
+	##
 	par1 = r'$'+toLatex.py2tex(par1)+r'$'
 	listGui2.append(par1) #12
 	#giai phuogn trinh dao ham
 	if par3.find("I") == -1:#neu phuong trinh co nghiem
+		style_s = 1
 		if par3.find("^(1/2)") != -1: #nghiem co chua dau can
-			par3 = par3.replace("^(1/2)","")
-			j =len(par3)
-			j=j-1
-			while '0'<=par3[j]<='9':
-				j=j-1
-			par3 = par3[:j+1]+'sqrt('+par3[j+1:]+')'
+			par3 = re2sqrt(par3)
 		par3 = r'$'+toLatex.py2tex(par3)+r'$'
 		listGui2.append(par3) #13
+		listGui3.append(par3) #GUI3 #4
 
-		if par4.find("^(1/2)") != -1:
-			par4 = par4.replace("^(1/2)","")
-			j =len(par4)
-			j=j-1
-			while '0'<=par4[j]<='9':
-				j=j-1
-			par4 = par4[:j+1]+'sqrt('+par4[j+1:]+')'
+		if par4.find("^(1/2)") != -1: #tuong tu
+			par4 = re2sqrt(par4)
 		par4 = r'$'+toLatex.py2tex(par4)+r'$'
 		listGui2.append(par4) #14
-	else :
+		listGui3.append(par4) #GUI3 #5
+	else : #phuong trinh vo nghiem
+		style_s = 2
 		par3 = par3.replace("^(1/2)","")
 		j =len(par3)
 		j=j-1
@@ -329,6 +330,7 @@ def exe(l):
 		listGui2.append(par4) #14
 
 	content = r'''
+
 $\star$Khảo sát và vẽ đồ thị của hàm số: 
 {0}
 $\star$Hàm số đã cho có tập xác định là {1}
@@ -346,10 +348,14 @@ $\star$Ta có: y'={12}
 '''.format(listGui2[0],listGui2[1],listGui2[2],listGui2[3],listGui2[4],listGui2[5],listGui2[6],\
 listGui2[7],listGui2[8],listGui2[9],listGui2[10],listGui2[11],listGui2[12],listGui2[13],listGui2[14])
 	
-	r.setUI2(mathTex_to_QPixmap(_translate("Form",content,None),13))
+	# print listGui3
+
+
+	r.setUI2(mathTex_to_QPixmap(_translate("Form",content,None),13),paintEvent(QtGui.QWidget,listGui3,style_s,style_g))
 	r.showF2()
 class MainWindows(object):
 	def run(self):
+		
 		self.app = QtGui.QApplication(sys.argv)
 		self.F = QtGui.QWidget()
 		self.ui = Ui_Form()
@@ -357,10 +363,10 @@ class MainWindows(object):
 		self.F2 = QtGui.QWidget()
 		self.ui2 = m.Ui_Form()
 		self.ui2.setupUi(self.F2)
-
+		
 		self.F.show()
-	def setUI2(self,k):
-		self.ui2.set(k)
+	def setUI2(self,k,k1):
+		self.ui2.set(k,k1)
 	def hideF1(self):
 		self.F.hide()
 	def showF2(self):
