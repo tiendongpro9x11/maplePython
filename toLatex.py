@@ -141,4 +141,3 @@ class LatexVisitor(ast.NodeVisitor):
 def py2tex(expr):
     pt = ast.parse(expr)
     return LatexVisitor().visit(pt.body[0].value)
-#print py2tex("sqrt(2)/5")
