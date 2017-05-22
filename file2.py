@@ -280,14 +280,19 @@ def exe(l):
 	par2 = par2[0]+')' #par2 := (x^2+x+1)
 	par2 = maple('solve('+par2+');')
 	par2 = par2.split(',')
-	par3 = maple('simplify('+par2[0]+');') #nghiem 1
-	par4 = maple('simplify('+par2[1]+');') #nghiem 2
+	par_1 = maple('if evalf('+par2[0]+') < evalf('+par2[1]+') then 1 else 0 fi;')
+	if int(par_1) == 1:
+		par3 = maple('simplify('+par2[0]+');') #nghiem 1
+		par4 = maple('simplify('+par2[1]+');') #nghiem 2
+	else :
+		par3 = maple('simplify('+par2[1]+');') #nghiem 1
+		par4 = maple('simplify('+par2[0]+');') #nghiem 2
 	# x1,x2 -> y(x)
 	par5 = maple("x:="+par3+":expand("+s+");")
 	par5 = re2sqrt(par5)
 	par5 = r'$'+toLatex.py2tex(par5)+r'$'
-
 	listGui3.append(par5) #GUI3 #2
+	
 	par5 = maple("x:="+par4+":expand("+s+");")
 	par5 = re2sqrt(par5)
 	par5 = r'$'+toLatex.py2tex(par5)+r'$'

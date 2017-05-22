@@ -96,21 +96,21 @@ def paintEvent(QWidget,control,style_s=1,style_g=1):
 	midXIE = (I[0]+E[0])/2
 	midXID = (I[0]+D[0])/2
 	if style_s==1:
-		latex = control[4] #4
+		latex = control[3] #4
 		qp.drawPixmap(midXIE-10,posx[1]-20,mathTex_to_QPixmap(latex,10)) # x1
 	if style_s==1:
-		latex = control[2] #2
+		latex = control[1] #2
 		if style_g==1:
 			qp.drawPixmap(midXIE-10,D[1]+2,mathTex_to_QPixmap(latex,10)) #type 1 MIN
 		elif style_g==2:
-			qp.drawPixmap(midXIE-10,F[1]-30,mathTex_to_QPixmap(latex,10))#type 2 MIN
+			qp.drawPixmap(midXIE-10,F[1]-15,mathTex_to_QPixmap(latex,10))#type 2 MIN
 	if style_s==1:
-		latex = control[3] #3
+		latex = control[4] #3
 		qp.drawPixmap(midXID-10,posx[1]-20,mathTex_to_QPixmap(latex,10)) # x2
 	if style_s==1:
-		latex = control[1] #1
+		latex = control[2] #1
 		if style_g==1:
-			qp.drawPixmap(midXID-10,F[1]-30,mathTex_to_QPixmap(latex,10)) #type 1 MAX
+			qp.drawPixmap(midXID-10,F[1]-15,mathTex_to_QPixmap(latex,10)) #type 1 MAX
 		elif style_g==2:
 			qp.drawPixmap(midXID-10,D[1]+2,mathTex_to_QPixmap(latex,10)) #type 2 MAX
 	##
@@ -198,5 +198,5 @@ def paintEvent(QWidget,control,style_s=1,style_g=1):
 			qp.drawLine(I[0]-35+move,F[1]-15,I[0]-43+move,F[1]-13)
 			qp.drawLine(I[0]-35+move,F[1]-15,I[0]-39+move,F[1]-23)
 	qp.end()
-	# img.save("im.png")
+	img.save("im.png")
 	return img
