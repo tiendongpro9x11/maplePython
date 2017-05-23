@@ -246,7 +246,7 @@ def exe(l):
 	X = 'r:=rem('+str(l[0])+'*x^2+('+str(l[1])+')*x+('+str(l[2])+'),'+str(l[3])+'*x+('+str(l[4])+'),x,\'q\'):q;'
 	par1 = maple(X) #get q
 	par1 = par1.replace("^","**")
-	
+	#phep chia da thuc
 	par2 = maple("rem("+str(l[0])+"*x^2+("+str(l[1])+")*x+("+str(l[2])+"),"+str(l[3])+"*x+("+str(l[4])+"),x,\'q\')/("+str(l[3])+"*x+("+str(l[4])+")):simplify(%);")
 
 	par3 = r'$y='+toLatex.py2tex(par1)+r'$' #phan nguyen
@@ -275,33 +275,41 @@ def exe(l):
 	listGui2.append(par3) #11
 
 	par1 = maple("simplify(diff("+s+",x));")
-	par2 = par1.split(")/") # par2:=[(x^2+x+1,(x+1)] missing ')'
+	par2 = par1.split(")/") # y' par2:=[(x^2+x+1,(x+1)^2] thieu ')'
+	par_2 = par2
+	# par_2[0] = par_2[0] + ')' # them ) #error
 	par1 = par1.replace("^","**")
 	par2 = par2[0]+')' #par2 := (x^2+x+1)
 	par2 = maple('solve('+par2+');')
 	par2 = par2.split(',')
-	par_1 = maple('if evalf('+par2[0]+') < evalf('+par2[1]+') then 1 else 0 fi;')
-	if int(par_1) == 1:
-		par3 = maple('simplify('+par2[0]+');') #nghiem 1
-		par4 = maple('simplify('+par2[1]+');') #nghiem 2
-	else :
-		par3 = maple('simplify('+par2[1]+');') #nghiem 1
-		par4 = maple('simplify('+par2[0]+');') #nghiem 2
-	# x1,x2 -> y(x)
-	par5 = maple("x:="+par3+":expand("+s+");")
-	par5 = re2sqrt(par5)
-	par5 = r'$'+toLatex.py2tex(par5)+r'$'
-	listGui3.append(par5) #GUI3 #2
 	
-	par5 = maple("x:="+par4+":expand("+s+");")
-	par5 = re2sqrt(par5)
-	par5 = r'$'+toLatex.py2tex(par5)+r'$'
-	listGui3.append(par5) #GUI3 #3
+	par_3 = maple('if type(evalf('+par2[0]+'),float) then 0 else 1 fi;')
+	if int(par_3) != 1:
+		par_1 = maple('if evalf('+par2[0]+') < evalf('+par2[1]+') then 1 else 0 fi;') ##sap xep nghiem x1 < x2
+
+		if int(par_1) == 1:
+			par3 = maple('simplify('+par2[0]+');') #nghiem 1
+			par4 = maple('simplify('+par2[1]+');') #nghiem 2
+		elif int(par_1) == 0 :
+			par3 = maple('simplify('+par2[1]+');') #nghiem 1
+			par4 = maple('simplify('+par2[0]+');') #nghiem 2
+		# x1,x2 -> y(x)
+		par5 = maple("x:="+par3+":expand("+s+");")
+		par5 = re2sqrt(par5)
+		par5 = r'$'+toLatex.py2tex(par5)+r'$'
+		listGui3.append(par5) #GUI3 #2
+
+		par5 = maple("x:="+par4+":expand("+s+");")
+		par5 = re2sqrt(par5)
+		par5 = r'$'+toLatex.py2tex(par5)+r'$'
+		listGui3.append(par5) #GUI3 #3
 	##
+
 	par1 = r'$'+toLatex.py2tex(par1)+r'$'
 	listGui2.append(par1) #12
 	#giai phuogn trinh dao ham
-	if par3.find("I") == -1:#neu phuong trinh co nghiem
+	subcontent = ''
+	if int(par_3) != 1:#neu phuong trinh co nghiem
 		style_s = 1
 		if par3.find("^(1/2)") != -1: #nghiem co chua dau can
 			par3 = re2sqrt(par3)
@@ -314,26 +322,22 @@ def exe(l):
 		par4 = r'$'+toLatex.py2tex(par4)+r'$'
 		listGui2.append(par4) #14
 		listGui3.append(par4) #GUI3 #5
+		subcontent = '$y\'=0 \Leftrightarrow$ x={0} hoặc x={1}'.format(listGui2[13],listGui2[14])
 	else : #phuong trinh vo nghiem
 		style_s = 2
-		par3 = par3.replace("^(1/2)","")
-		j =len(par3)
-		j=j-1
-		while '0'<=par3[j]<='9':
-			j=j-1
-		par3 = par3[:j+1]+'sqrt('+par3[j+1:]+')'
-		par3 = r'$'+toLatex.py2tex(par3)+r'$'
-		listGui2.append(par3) #13
+		par_2[0] = par_2[0] + ')'
+		par1 = maple('rem('+par_2[0]+','+par_2[1]+',x,\'q\'):q;')
+		par1 = r'$'+toLatex.py2tex(par1)+r'$'
+		par2 = maple('rem('+par_2[0]+','+par_2[1]+',x,\'q\')/'+par_2[1]+':simplify(%);')
+		par2 = par2.replace("^","**")
+		par2 = r'$'+toLatex.py2tex(par2)+r'$'
+		if style_g==1:
+			cpa = '>'
+		else :
+			cpa = '<'
+		subcontent = r"y'={0} + {1} {2} 0 với mọi $x \neq {3}$".format(par1,par2,cpa,par_0)
 
-		par4 = par4.replace("^(1/2)","")
-		j =len(par4)
-		j=j-1
-		while '0'<=par4[j]<='9':
-			j=j-1
-		par4 = par4[:j+1]+'sqrt('+par4[j+1:]+')'
-		par4 = r'$'+toLatex.py2tex(par4)+r'$'
-		listGui2.append(par4) #14
-
+	
 	content = r'''
 
 $\star$Khảo sát và vẽ đồ thị của hàm số: 
@@ -349,9 +353,9 @@ $\star$Vì {10} nên đường thẳng {11} là tiệm cận xiên của
  đồ thị hàm số đã cho khi $x\to+\infty$ và $x\to-\infty$
 $\star$Bảng biến thiên:
 $\star$Ta có: y'={12}
-	$y'=0 \Leftrightarrow$ x={13} hoặc x={14}
+	{13}
 '''.format(listGui2[0],listGui2[1],listGui2[2],listGui2[3],listGui2[4],listGui2[5],listGui2[6],\
-listGui2[7],listGui2[8],listGui2[9],listGui2[10],listGui2[11],listGui2[12],listGui2[13],listGui2[14])
+listGui2[7],listGui2[8],listGui2[9],listGui2[10],listGui2[11],listGui2[12],subcontent)
 	
 	# print listGui3
 

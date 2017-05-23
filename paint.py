@@ -4,14 +4,12 @@ from PyQt4.QtCore import *
 from mathTex2Pixmap import mathTex_to_QPixmap
 
 def paintEvent(QWidget,control,style_s=1,style_g=1):
-	# size = 1
-	# QGraphicsScene scene;
+
 	img = QImage(500,200,QImage.Format_ARGB32_Premultiplied)
 	qp = QPainter()
 	qp.begin(img)
 	qp.setPen(QColor(Qt.black))
 	
-	# qp.setColor(QColor(Qt.black))
 	brush = QBrush(Qt.SolidPattern)
 	brush.setColor(QColor(Qt.white))
 	qp.setBrush(brush)
@@ -20,7 +18,6 @@ def paintEvent(QWidget,control,style_s=1,style_g=1):
 
 	pen = QPen(Qt.black, 2, Qt.SolidLine)
 	qp.setPen(pen)
-	# qp.setPen(QColor(Qt.black))
 	# style_s = 1 #dao ham co nghiem 
 	# style_s = 2 #dao ham vo nghiem
 	# style_g = 1 #dang do thi a > 0
@@ -198,5 +195,5 @@ def paintEvent(QWidget,control,style_s=1,style_g=1):
 			qp.drawLine(I[0]-35+move,F[1]-15,I[0]-43+move,F[1]-13)
 			qp.drawLine(I[0]-35+move,F[1]-15,I[0]-39+move,F[1]-23)
 	qp.end()
-	img.save("im.png")
+	# img.save("im.png")
 	return img
