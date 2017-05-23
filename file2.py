@@ -8,14 +8,14 @@
 
 from PyQt4 import QtGui ,QtCore
 from mathTex2Pixmap import mathTex_to_QPixmap
+import os
 import sys
 import toLatex
 import m
-import pexpect
+from maple import maple
 import thread
 from paint import paintEvent
 from replace2sqrt import re2sqrt
-
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -170,7 +170,6 @@ class Ui_Dialog(object):
 		QtCore.QMetaObject.connectSlotsByName(Dialog)
 
 		self.buttonBox.accepted.connect(self.f1)
-		# self.buttonBox.rejected.connect(self.f2)
 
 		self.buttonBox.setStyleSheet(_fromUtf8("background-color: black;color:white;"))
 
@@ -206,16 +205,7 @@ class Ui_Dialog(object):
 		else:
 			exe(l)
 			
-MW = "/home/rues/maple2016/bin/maple -tu"
-def maple(X):
-	child = pexpect.spawn(MW)
-	child.expect('#--')
-	child.sendline(X)
-	child.expect('#--')
-	out = child.before
-	out = out[out.find(';')+1:].strip()
-	out = ''.join(out.split('\r\n'))
-	return out
+
 
 #run after click ok
 def exe(l):
@@ -244,6 +234,7 @@ def exe(l):
 	
 	X = 'r:=rem('+str(l[0])+'*x^2+('+str(l[1])+')*x+('+str(l[2])+'),'+str(l[3])+'*x+('+str(l[4])+'),x,\'q\'):q;'
 	par1 = maple(X) #get q
+	s1 = par1
 	par1 = par1.replace("^","**")
 	#phep chia da thuc
 	par2 = maple("rem("+str(l[0])+"*x^2+("+str(l[1])+")*x+("+str(l[2])+"),"+str(l[3])+"*x+("+str(l[4])+"),x,\'q\')/("+str(l[3])+"*x+("+str(l[4])+")):simplify(%);")
@@ -355,9 +346,14 @@ $\star$Ta có: y'={12}
 	{13}
 '''.format(listGui2[0],listGui2[1],listGui2[2],listGui2[3],listGui2[4],listGui2[5],listGui2[6],\
 listGui2[7],listGui2[8],listGui2[9],listGui2[10],listGui2[11],listGui2[12],subcontent)
-
+	
 	r.setUI2(mathTex_to_QPixmap(_translate("Form",content,None),13),paintEvent(QtGui.QWidget,listGui3,style_s,style_g))
 	r.showF2()
+	#write on run graph
+	F = open(os.getcwd()+"/rungrap.mpl","w")
+	F.write("plotsetup(default):interface(plotdevice):plotsetup(tek,kermit):plotsetup(ps,plotoutput=`plot.ps`,plotoptions=`portrait, noborder, width=1000, height=500`):\
+plotsetup(x11):plotsetup(maplet):plot(["+s+","+s1+"],x,color=[\"Red\",\"Red\"]);")
+	
 class MainWindows(object):
 	def run(self):
 		
@@ -371,7 +367,7 @@ class MainWindows(object):
 		
 		self.F.show()
 	def setUI2(self,k,k1):
-		self.ui2.set(k,k1)
+		self.ui2.setpix(k,k1)
 	def hideF1(self):
 		self.F.hide()
 	def showF2(self):
