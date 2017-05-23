@@ -63,12 +63,3 @@ class Ui_Form(object):
 	def showgraph(self):
 		os.system("/home/rues/maple2016/bin/./maple "+os.getcwd()+"/rungrap.mpl")
 		
-if __name__ == "__main__":
-	import sys
-	app = QtGui.QApplication(sys.argv)
-	Form = QtGui.QWidget()
-	ui = Ui_Form()
-	ui.setupUi(Form)
-	Form.show()
-	sys.exit(app.exec_())
-
