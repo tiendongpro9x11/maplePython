@@ -34,7 +34,6 @@ except AttributeError:
 # matplotlib.rcParams['mathtext.fontset'] = 'stix'
 # matplotlib.rcParams['font.family'] = 'STIXGeneral'
 
-
 #Form step 1
 class Ui_Form(object):
 	def setupUi(self, Form):
@@ -283,8 +282,8 @@ def exe(l):
 	par2 = maple('solve('+par2+');')
 	par2 = par2.split(',')
 	
-	par_3 = maple('if type(evalf('+par2[0]+'),float) then 0 else 1 fi;')
-	if int(par_3) != 1:
+	par_3 = maple('if type(evalf('+par2[0]+'),float) then 0 else 1 fi;')  #co nghiem hay ko
+	if int(par_3) != 1: #neu co nghiem
 		par_1 = maple('if evalf('+par2[0]+') < evalf('+par2[1]+') then 1 else 0 fi;') ##sap xep nghiem x1 < x2
 
 		if int(par_1) == 1:
@@ -356,9 +355,6 @@ $\star$Ta có: y'={12}
 	{13}
 '''.format(listGui2[0],listGui2[1],listGui2[2],listGui2[3],listGui2[4],listGui2[5],listGui2[6],\
 listGui2[7],listGui2[8],listGui2[9],listGui2[10],listGui2[11],listGui2[12],subcontent)
-	
-	# print listGui3
-
 
 	r.setUI2(mathTex_to_QPixmap(_translate("Form",content,None),13),paintEvent(QtGui.QWidget,listGui3,style_s,style_g))
 	r.showF2()
