@@ -4,7 +4,10 @@ def re2sqrt(s):
         j -= 1
         while '0'<=s[j]<='9':
             j=j-1
-        s = s[:j+1]+'sqrt('+s[j+1:]
+        if (j+1) < 0:
+            s = 'sqrt('+s
+        else:
+            s = s[:j+1]+'sqrt('+s[j+1:]
         s = s.replace("^(1/2)",")",1)
         j = s.find("^(1/2)")
     return s

@@ -8,10 +8,13 @@
 
 from PyQt4 import QtCore, QtGui
 import os
+import popplerqt4
 from maple import maple
 
 # from os.path import expanduser
 # home = expanduser("~")
+from run import getMapleDir
+mapleDir = getMapleDir()
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -31,16 +34,13 @@ class Ui_Form(object):
 		Form.setObjectName(_fromUtf8("Form"))
 		Form.resize(840, 680)
 		Form.setStyleSheet(_fromUtf8("background-color:  rgb(255, 255, 255);"))
-		self.verticalLayoutWidget = QtGui.QWidget(Form)
-		self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 10, 830, 460))
-		self.verticalLayoutWidget.setObjectName(_fromUtf8("verticalLayoutWidget"))
-		self.verticalLayout = QtGui.QVBoxLayout(self.verticalLayoutWidget)
-		self.verticalLayout.setMargin(0)
-		self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-		self.label = QtGui.QLabel(self.verticalLayoutWidget)
+		self.area = QtGui.QScrollArea(Form)
+		self.area.setGeometry(QtCore.QRect(10,10,800,500))
+
+		self.label = QtGui.QLabel(self.area)
 		self.label.setText(_fromUtf8(""))
 		self.label.setObjectName(_fromUtf8("label"))
-		self.verticalLayout.addWidget(self.label)
+
 
 		self.label_2 = QtGui.QLabel(Form)
 		self.label_2.setObjectName(_fromUtf8("label"))
@@ -57,9 +57,19 @@ class Ui_Form(object):
 	def retranslateUi(self, Form):
 		Form.setWindowTitle(_translate("Form", "Form", None))
 		self.pushButton.setText(_translate("Form", "Show Graph", None))
-	def setpix(self,x,y):
-		self.label.setPixmap(QtGui.QPixmap(x))
+	def setpix(self,y):
+		# self.label.setPixmap(QtGui.QPixmap(x))
+		self.readpdffile()
 		self.label_2.setPixmap(QtGui.QPixmap(y))
 	def showgraph(self):
-		os.system("/home/rues/maple2016/bin/./maple "+os.getcwd()+"/rungrap.mpl")
-		
+		os.system("/home/rues/maple2016/bin/maple "+os.getcwd()+"/rungrap.mpl")
+
+	def readpdffile(self):
+		doc = popplerqt4.Poppler.Document.load(os.getcwd()+"/latex.pdf")
+		# print doc
+		doc.setRenderHint(popplerqt4.Poppler.Document.Antialiasing)
+		doc.setRenderHint(popplerqt4.Poppler.Document.TextAntialiasing)
+		page = doc.page(0)
+		image = page.renderToImage(80,80)
+		self.label.setPixmap(QtGui.QPixmap.fromImage(image))
+		self.area.setWidget(self.label)

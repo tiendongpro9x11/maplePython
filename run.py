@@ -13,9 +13,9 @@ import sys
 import toLatex
 import m
 from maple import maple
-import thread
 from paint import paintEvent
 from replace2sqrt import re2sqrt
+
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -30,10 +30,10 @@ except AttributeError:
 	def _translate(context, text, disambig):
 		return QtGui.QApplication.translate(context, text, disambig)
 
-# import matplotlib
-# matplotlib.rcParams['mathtext.fontset'] = 'stix'
-# matplotlib.rcParams['font.family'] = 'STIXGeneral'
-
+import matplotlib
+matplotlib.rcParams['mathtext.fontset'] = 'stix'
+matplotlib.rcParams['font.family'] = 'STIXGeneral'
+mapleDir = ''
 #Form step 1
 class Ui_Form(object):
 	def setupUi(self, Form):
@@ -92,6 +92,11 @@ class Ui_Form(object):
 		##
 		self.pushButton.clicked.connect(self.showdialog)
 		##
+		self.pushButton_5 = QtGui.QPushButton(Form)
+		self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
+		self.pushButton_5.setGeometry(QtCore.QRect(0, 0, 99, 40))
+		self.pushButton_5.setStyleSheet(_fromUtf8("background-color: black;color:white;"))
+		self.pushButton_5.clicked.connect(self.openfile)
 		self.retranslateUi(Form)
 		QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -102,8 +107,19 @@ class Ui_Form(object):
 		self.pushButton_4.setText(_translate("Form", "Select", None))
 		self.pushButton_2.setText(_translate("Form", "Select", None))
 		self.pushButton.setText(_translate("Form", "Select", None))
+		self.pushButton_5.setText(_translate("Form","Open file",None))
+	def openfile(self):
+		dlg = QtGui.QFileDialog()
+		dlg.setFileMode(QtGui.QFileDialog.AnyFile)
+		dlg.setFilter("Select Maple command line")
+		filenames = QtCore.QStringList()
+		if dlg.exec_():
+			filenames = dlg.selectedFiles()
+		a = [str(name) for name in filenames]
+		mapleDir = a[0]
 	#run dialog
 	def showdialog(self):
+		##xa nhau tu day
 		r.hideF1()
 		Form = QtGui.QDialog()
 		ui = Ui_Dialog()
@@ -111,6 +127,8 @@ class Ui_Form(object):
 		Form.show()
 		Form.exec_()
 #form dialog	
+def getMapleDir():
+	return mapleDir
 class Ui_Dialog(object):
 	def setupUi(self, Dialog):
 		Dialog.setObjectName(_fromUtf8("Dialog"))
@@ -186,7 +204,6 @@ class Ui_Dialog(object):
 		r.showF1()
 	#event click OK	
 	def f1(self):
-		
 		l = []
 		if not self.lineEdit.text().isEmpty():
 			shots = int(self.lineEdit.text())
@@ -211,8 +228,6 @@ class Ui_Dialog(object):
 		else:
 			exe(l)
 			
-
-
 #run after click ok
 def exe(l):
 
@@ -278,8 +293,12 @@ def exe(l):
 	par2 = par2[0]+')' #par2 := (x^2+x+1)
 	par2 = maple('solve('+par2+');')
 	par2 = par2.split(',')
-	
+	# with open(os.getcwd()+"/file.log","w") as F:
+	# 	for x in listGui2:
+	# 		F.write("Run-300: "+str(x)+"\n")
+	#print "p"+par2[0]
 	par_3 = maple('if type(evalf('+par2[0]+'),float) then 0 else 1 fi;')  #co nghiem hay ko
+	#print "p"+par_3
 	if int(par_3) != 1: #neu co nghiem
 		par_1 = maple('if evalf('+par2[0]+') < evalf('+par2[1]+') then 1 else 0 fi;') ##sap xep nghiem x1 < x2
 
@@ -292,15 +311,19 @@ def exe(l):
 		# x1,x2 -> y(x)
 		par5 = maple("x:="+par3+":expand("+s+");")
 		par5 = re2sqrt(par5)
+		
 		par5 = r'$'+toLatex.py2tex(par5)+r'$'
 		listGui3.append(par5) #GUI3 #2
-
+		
 		par5 = maple("x:="+par4+":expand("+s+");")
 		par5 = re2sqrt(par5)
+		
 		par5 = r'$'+toLatex.py2tex(par5)+r'$'
 		listGui3.append(par5) #GUI3 #3
 	##
-
+	# with open(os.getcwd()+"/file.log","w") as F:
+	# 	for x in listGui3:
+	# 		F.write("Run-300: "+str(x)+"\n")
 	par1 = r'$'+toLatex.py2tex(par1)+r'$'
 	listGui2.append(par1) #12
 	#giai phuogn trinh dao ham
@@ -318,7 +341,7 @@ def exe(l):
 		par4 = r'$'+toLatex.py2tex(par4)+r'$'
 		listGui2.append(par4) #14
 		listGui3.append(par4) #GUI3 #5
-		subcontent = '$y\'=0 \Leftrightarrow$ x={0} hoặc x={1}'.format(listGui2[13],listGui2[14])
+		subcontent = '$y\'=0 \Leftrightarrow$ x={0} hoac x={1}'.format(listGui2[13],listGui2[14])
 	else : #phuong trinh vo nghiem
 		style_s = 2
 		par_2[0] = par_2[0] + ')'
@@ -332,37 +355,55 @@ def exe(l):
 		else :
 			cpa = '<'
 		subcontent = r"y'={0} + {1} {2} 0 với mọi $x \neq {3}$".format(par1,par2,cpa,par_0)
-
 	
-	content = r'''
-
-$\star$Khảo sát và vẽ đồ thị của hàm số: 
-{0}
-$\star$Hàm số đã cho có tập xác định là {1}
-$\star$Sự biến thiên của hàm số:
-$\star$Ta viết hàm số đã cho dưới dạng {2}
-$\star$Ta có 
-{3} và {4}
-$\star$Vì {5} và {6} nên đường thẳng {7} là đường thẳng 
-tiệm cận đứng của đồ thị hàm số đã cho khi {8} và khi {9}
-$\star$Vì {10} nên đường thẳng {11} là tiệm cận xiên của
- đồ thị hàm số đã cho khi $x\to+\infty$ và $x\to-\infty$
-$\star$Bảng biến thiên:
-$\star$Ta có: y'={12}
-	{13}
-'''.format(listGui2[0],listGui2[1],listGui2[2],listGui2[3],listGui2[4],listGui2[5],listGui2[6],\
-listGui2[7],listGui2[8],listGui2[9],listGui2[10],listGui2[11],listGui2[12],subcontent)
+	with open(os.getcwd()+"/file.log","w") as F:
+		for x in listGui2:
+			F.write("Run-362: "+str(x)+"\n")
 	
-	r.setUI2(mathTex_to_QPixmap(_translate("Form",content,None),13),paintEvent(QtGui.QWidget,listGui3,style_s,style_g))
+	content_t = r'''\documentclass[17pt]{extarticle}
+\setlength{\parindent}{0pt}
+\usepackage[utf8]{vietnam}
+\usepackage[paperheight=6in,paperwidth=8.5in,margin=2pt]{geometry}
+\begin{document}
+\everymath{\displaystyle}
+'''
+	content = r'''$\star$ Khảo sát và vẽ đồ thì hàm số: \\
+{0}\\
+ Hàm số đã cho có tập xác định là: {1}\\
+ Sự biến thiên của hàm số:\\
+	Ta viết hàm số dưới dạng: {2}\\
+ Ta có: \\
+{3} va {4}\\
+ Vì {5} và {6} nên đường thẳng {7} là đường thẳng\\
+tiệm cận đứng của đồ thị đã cho khi {8} và khi {9}\\
+ Vì {10} nên đường thẳng {11} là tiệm cận xiên của\\
+ đồ thị hàm số đã cho khi $x\to+\infty$ và $x\to-\infty$\\
+$\star$ Bảng biến thiên:\\
+ Ta có: y'={12} \\
+	{13} \\
+'''.format(listGui2[0],listGui2[1],listGui2[2],listGui2[3],listGui2[4],listGui2[5],listGui2[6],listGui2[7],listGui2[8],listGui2[9],listGui2[10],listGui2[11],listGui2[12],subcontent)
+	##
+	with open(os.getcwd()+"/latex.tex","w") as F:
+		F.write(content_t+content+"\end{document}")
+	os.system("pdflatex "+os.getcwd()+"/latex.tex")
+	##
+	r.setUI2(paintEvent(QtGui.QWidget,listGui3,style_s,style_g))
 	r.showF2()
 	#write on run graph
-	F = open(os.getcwd()+"/rungrap.mpl","w")
-	F.write("plotsetup(default):interface(plotdevice):plotsetup(tek,kermit):plotsetup(ps,plotoutput=`plot.ps`,plotoptions=`portrait, noborder, width=1000, height=500`):\
-plotsetup(x11):plotsetup(maplet):plot(["+s+","+s1+"],x,color=[\"Red\",\"Red\"]);")
+	with open(os.getcwd()+"/rungrap.mpl","w") as F:
+		content_F = r'''
+plotsetup(default):
+interface(plotdevice):
+plotsetup(tek,kermit):
+plotsetup(ps,plotoutput=`plot.ps`,plotoptions=`portrait, noborder, width=1000, height=500`):
+plotsetup(x11):
+plotsetup(maplet):
+plot([{0},{1}],x,color=["Red","Red"]);
+'''.format(s,s1)
+		F.write(content_F)
 	
 class MainWindows(object):
 	def run(self):
-		
 		self.app = QtGui.QApplication(sys.argv)
 		self.F = QtGui.QWidget()
 		self.ui = Ui_Form()
@@ -372,8 +413,8 @@ class MainWindows(object):
 		self.ui2.setupUi(self.F2)
 		
 		self.F.show()
-	def setUI2(self,k,k1):
-		self.ui2.setpix(k,k1)
+	def setUI2(self,k):
+		self.ui2.setpix(k)
 	def hideF1(self):
 		self.F.hide()
 	def showF1(self):

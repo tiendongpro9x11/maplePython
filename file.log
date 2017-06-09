@@ -1,0 +1,15 @@
+Run-362: $y=\frac{x^{2} + x + 1}{2 \; x + 1}$
+Run-362: $R\backslash\left\{\frac{-1}{2}\right\}$
+Run-362: $y=\frac{1}{2} \; x + \frac{1}{4}+\frac{3}{8 \; x + 4}$
+Run-362: $\lim_{x\to -\infty }y=-\infty$
+Run-362: $\lim_{x\to+\infty }y=+\infty$
+Run-362: $\lim_{x\to(\frac{-1}{2})^{-} }y=-\infty$
+Run-362: $\lim_{x\to(\frac{-1}{2})^{+} }y=+\infty$
+Run-362: $x=\frac{-1}{2}$
+Run-362: $x\to(\frac{-1}{2})^{-}$
+Run-362: $x\to(\frac{-1}{2})^{+}$
+Run-362: $\lim_{x\to\infty}(\frac{3}{8 \; x + 4})=0$
+Run-362: $y=\frac{1}{2} \; x + \frac{1}{4}$
+Run-362: $\frac{2 \; x^{2} + 2 \; x - 1}{\left(2 \; x + 1\right)^{2}}$
+Run-362: $\frac{-1}{2} - \frac{1}{2} \; \sqrt{3}$
+Run-362: $\frac{1}{2} \; \sqrt{3} - \frac{1}{2}$

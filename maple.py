@@ -1,4 +1,6 @@
 import pexpect
+# from run import getMapleDir
+# mapleDir = getMapleDir()
 MW = "/home/rues/maple2016/bin/maple -tu"
 def maple(X):
 	child = pexpect.spawn(MW)
