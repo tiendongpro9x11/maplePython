@@ -11,11 +11,6 @@ import os
 import popplerqt4
 from maple import maple
 
-# from os.path import expanduser
-# home = expanduser("~")
-from run import getMapleDir
-mapleDir = getMapleDir()
-
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -58,18 +53,18 @@ class Ui_Form(object):
 		Form.setWindowTitle(_translate("Form", "Form", None))
 		self.pushButton.setText(_translate("Form", "Show Graph", None))
 	def setpix(self,y):
-		# self.label.setPixmap(QtGui.QPixmap(x))
 		self.readpdffile()
 		self.label_2.setPixmap(QtGui.QPixmap(y))
 	def showgraph(self):
-		os.system("/home/rues/maple2016/bin/maple "+os.getcwd()+"/rungrap.mpl")
+		with open(os.getcwd()+"/linkmaple.txt") as F:
+			MAPLEDIR = F.readline()
+		os.system(MAPLEDIR+" "+os.getcwd()+"/rungrap.mpl")
 
 	def readpdffile(self):
 		doc = popplerqt4.Poppler.Document.load(os.getcwd()+"/latex.pdf")
-		# print doc
 		doc.setRenderHint(popplerqt4.Poppler.Document.Antialiasing)
 		doc.setRenderHint(popplerqt4.Poppler.Document.TextAntialiasing)
 		page = doc.page(0)
-		image = page.renderToImage(80,80)
+		image = page.renderToImage(75,75)
 		self.label.setPixmap(QtGui.QPixmap.fromImage(image))
 		self.area.setWidget(self.label)

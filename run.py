@@ -9,9 +9,9 @@
 from PyQt4 import QtGui ,QtCore
 from mathTex2Pixmap import mathTex_to_QPixmap
 import os
+import m
 import sys
 import toLatex
-import m
 from maple import maple
 from paint import paintEvent
 from replace2sqrt import re2sqrt
@@ -33,10 +33,11 @@ except AttributeError:
 import matplotlib
 matplotlib.rcParams['mathtext.fontset'] = 'stix'
 matplotlib.rcParams['font.family'] = 'STIXGeneral'
-mapleDir = ''
+
 #Form step 1
 class Ui_Form(object):
 	def setupUi(self, Form):
+		
 		Form.setObjectName(_fromUtf8("Form"))
 		Form.resize(754, 555)
 		Form.setStyleSheet(_fromUtf8("background-color:  rgb(255, 255, 255);\n"))
@@ -94,12 +95,14 @@ class Ui_Form(object):
 		##
 		self.pushButton_5 = QtGui.QPushButton(Form)
 		self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
-		self.pushButton_5.setGeometry(QtCore.QRect(0, 0, 99, 40))
+		self.pushButton_5.setGeometry(QtCore.QRect(0, 0, 150, 40))
 		self.pushButton_5.setStyleSheet(_fromUtf8("background-color: black;color:white;"))
 		self.pushButton_5.clicked.connect(self.openfile)
 		self.retranslateUi(Form)
 		QtCore.QMetaObject.connectSlotsByName(Form)
-
+		##hide all
+		self.gridLayoutWidget.hide()
+		
 	def retranslateUi(self, Form):
 		
 		Form.setWindowTitle(_translate("Form", "Form", None))
@@ -107,7 +110,7 @@ class Ui_Form(object):
 		self.pushButton_4.setText(_translate("Form", "Select", None))
 		self.pushButton_2.setText(_translate("Form", "Select", None))
 		self.pushButton.setText(_translate("Form", "Select", None))
-		self.pushButton_5.setText(_translate("Form","Open file",None))
+		self.pushButton_5.setText(_translate("Form","Open maple file",None))
 	def openfile(self):
 		dlg = QtGui.QFileDialog()
 		dlg.setFileMode(QtGui.QFileDialog.AnyFile)
@@ -116,19 +119,20 @@ class Ui_Form(object):
 		if dlg.exec_():
 			filenames = dlg.selectedFiles()
 		a = [str(name) for name in filenames]
-		mapleDir = a[0]
+	
+		MAPLEDIR = a[0]
+		with open(os.getcwd()+"/linkmaple.txt","w") as F:
+			F.write(MAPLEDIR)
+		self.gridLayoutWidget.show()
 	#run dialog
 	def showdialog(self):
-		##xa nhau tu day
 		r.hideF1()
 		Form = QtGui.QDialog()
 		ui = Ui_Dialog()
 		ui.setupUi(Form)
 		Form.show()
 		Form.exec_()
-#form dialog	
-def getMapleDir():
-	return mapleDir
+
 class Ui_Dialog(object):
 	def setupUi(self, Dialog):
 		Dialog.setObjectName(_fromUtf8("Dialog"))
@@ -227,7 +231,6 @@ class Ui_Dialog(object):
 			r.showF1()
 		else:
 			exe(l)
-			
 #run after click ok
 def exe(l):
 
@@ -341,7 +344,7 @@ def exe(l):
 		par4 = r'$'+toLatex.py2tex(par4)+r'$'
 		listGui2.append(par4) #14
 		listGui3.append(par4) #GUI3 #5
-		subcontent = '$y\'=0 \Leftrightarrow$ x={0} hoac x={1}'.format(listGui2[13],listGui2[14])
+		subcontent = r"y'=0 $\Leftrightarrow$ x={0} hoặc x={1}".format(listGui2[13],listGui2[14])
 	else : #phuong trinh vo nghiem
 		style_s = 2
 		par_2[0] = par_2[0] + ')'
@@ -360,14 +363,14 @@ def exe(l):
 		for x in listGui2:
 			F.write("Run-362: "+str(x)+"\n")
 	
-	content_t = r'''\documentclass[17pt]{extarticle}
+	content = r'''\documentclass[17pt]{extarticle}
 \setlength{\parindent}{0pt}
 \usepackage[utf8]{vietnam}
-\usepackage[paperheight=6in,paperwidth=8.5in,margin=2pt]{geometry}
+\usepackage[paperheight=6.6in,paperwidth=8.5in,margin=2pt]{geometry}
 \begin{document}
 \everymath{\displaystyle}
 '''
-	content = r'''$\star$ Khảo sát và vẽ đồ thì hàm số: \\
+	content += r'''$\star$ Khảo sát và vẽ đồ thì hàm số: \\
 {0}\\
  Hàm số đã cho có tập xác định là: {1}\\
  Sự biến thiên của hàm số:\\
@@ -384,24 +387,23 @@ $\star$ Bảng biến thiên:\\
 '''.format(listGui2[0],listGui2[1],listGui2[2],listGui2[3],listGui2[4],listGui2[5],listGui2[6],listGui2[7],listGui2[8],listGui2[9],listGui2[10],listGui2[11],listGui2[12],subcontent)
 	##
 	with open(os.getcwd()+"/latex.tex","w") as F:
-		F.write(content_t+content+"\end{document}")
+		F.write(content+"\end{document}")
 	os.system("pdflatex "+os.getcwd()+"/latex.tex")
 	##
 	r.setUI2(paintEvent(QtGui.QWidget,listGui3,style_s,style_g))
 	r.showF2()
 	#write on run graph
 	with open(os.getcwd()+"/rungrap.mpl","w") as F:
-		content_F = r'''
-plotsetup(default):
+		content_F = r'''plotsetup(default):
 interface(plotdevice):
 plotsetup(tek,kermit):
 plotsetup(ps,plotoutput=`plot.ps`,plotoptions=`portrait, noborder, width=1000, height=500`):
 plotsetup(x11):
 plotsetup(maplet):
-plot([{0},{1}],x,color=["Red","Red"]);
-'''.format(s,s1)
+plot([{0},{1}],x,color=["Red","Red"]);'''.format(s,s1)
 		F.write(content_F)
 	
+
 class MainWindows(object):
 	def run(self):
 		self.app = QtGui.QApplication(sys.argv)
@@ -411,7 +413,6 @@ class MainWindows(object):
 		self.F2 = QtGui.QWidget()
 		self.ui2 = m.Ui_Form()
 		self.ui2.setupUi(self.F2)
-		
 		self.F.show()
 	def setUI2(self,k):
 		self.ui2.setpix(k)

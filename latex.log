@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.5.19)  9 JUN 2017 17:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.5.19)  9 JUN 2017 20:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -583,11 +583,11 @@ LaTeX Font Info:    ... okay on input line 5.
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
 * h-part:(L,W,R)=(2.0pt, 610.295pt, 2.0pt)
-* v-part:(T,H,B)=(2.0pt, 429.62pt, 2.0pt)
+* v-part:(T,H,B)=(2.0pt, 472.98244pt, 2.0pt)
 * \paperwidth=614.295pt
-* \paperheight=433.62pt
+* \paperheight=476.98244pt
 * \textwidth=610.295pt
-* \textheight=429.62pt
+* \textheight=472.98244pt
 * \oddsidemargin=-70.26999pt
 * \evensidemargin=-70.26999pt
 * \topmargin=-117.26999pt
@@ -615,27 +615,27 @@ Underfull \hbox (badness 10000) in paragraph at lines 7--21
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] (./latex.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./latex.aux) ) 
 Here is how much of TeX's memory you used:
  1754 strings out of 493013
  21700 string characters out of 6135682
- 79476 words of memory out of 5000000
+ 79500 words of memory out of 5000000
  5321 multiletter control sequences out of 15000+600000
  6890 words of font info for 23 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 30i,4n,32p,262b,111s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/vnt
-ex/vnr/vnr17.pfb>
-Output written on latex.pdf (2 pages, 66103 bytes).
+ 30i,4n,32p,264b,111s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/vntex/v
+nr/vnr17.pfb>
+Output written on latex.pdf (1 page, 66090 bytes).
 PDF statistics:
- 39 PDF objects out of 1000 (max. 8388607)
- 27 compressed objects within 1 object stream
+ 36 PDF objects out of 1000 (max. 8388607)
+ 25 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,8 +1,10 @@
 import pexpect
-# from run import getMapleDir
-# mapleDir = getMapleDir()
-MW = "/home/rues/maple2016/bin/maple -tu"
+import os
+
 def maple(X):
+	with open(os.getcwd()+"/linkmaple.txt") as F:
+		MAPLEDIR = F.readline()
+	MW = MAPLEDIR + " -tu"
 	child = pexpect.spawn(MW)
 	child.expect('#--')
 	child.sendline(X)
