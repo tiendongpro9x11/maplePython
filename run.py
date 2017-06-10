@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtGui ,QtCore
+from PyQt4 import QtGui ,QtCore, QtXml
 from mathTex2Pixmap import mathTex_to_QPixmap
 import os
 import m

@@ -1,4 +1,4 @@
-from PyQt4 import QtGui ,QtCore
+from PyQt4 import QtGui ,QtCore, QtXml
 import matplotlib as mpl
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 

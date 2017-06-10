@@ -1,15 +1,14 @@
-import pexpect
 import os
 
 def maple(X):
 	with open(os.getcwd()+"/linkmaple.txt") as F:
 		MAPLEDIR = F.readline()
-	MW = MAPLEDIR + " -tu"
-	child = pexpect.spawn(MW)
-	child.expect('#--')
-	child.sendline(X)
-	child.expect('#--')
-	out = child.before
-	out = out[out.find(';')+1:].strip()
-	out = ''.join(out.split('\r\n'))
-	return out
+	with open(os.getcwd()+"/createMaple.mpl","w") as F:
+		F.write(X)
+	MW = MAPLEDIR + " -tu createMaple.mpl > getMaple.txt"
+	os.system(MW)
+	with open(os.getcwd()+"/getMaple.txt") as F:
+		out = F.readlines()
+	out = [x.strip() for x in out]
+
+	return out[1]
