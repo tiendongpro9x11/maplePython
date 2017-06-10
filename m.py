@@ -9,6 +9,7 @@
 from PyQt4 import QtCore, QtGui,QtXml
 import os
 import popplerqt4
+import platform
 from maple import maple
 
 try:
@@ -56,6 +57,8 @@ class Ui_Form(object):
 		self.readpdffile()
 		self.label_2.setPixmap(QtGui.QPixmap(y))
 	def showgraph(self):
+		if platform.system() != "Linux":
+			MAPLEDIR = "cmaple"
 		with open(os.getcwd()+"/linkmaple.txt") as F:
 			MAPLEDIR = F.readline()
 		os.system(MAPLEDIR+" "+os.getcwd()+"/rungrap.mpl")

@@ -12,6 +12,7 @@ import os
 import m
 import sys
 import toLatex
+import platform
 from maple import maple
 from paint import paintEvent
 from replace2sqrt import re2sqrt
@@ -101,7 +102,10 @@ class Ui_Form(object):
 		self.retranslateUi(Form)
 		QtCore.QMetaObject.connectSlotsByName(Form)
 		##hide all
-		self.gridLayoutWidget.hide()
+		if platform.system() == "Linux" :
+			self.gridLayoutWidget.hide()
+		else:
+			self.pushButton_5.hide()
 		
 	def retranslateUi(self, Form):
 		
