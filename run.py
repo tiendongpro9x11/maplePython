@@ -415,6 +415,7 @@ $\star$ Bảng biến thiên:\\
 	with open(os.getcwd()+"/latex.tex","w") as F:
 		F.write(content+"\end{document}")
 	os.system("pdflatex "+os.getcwd()+"/latex.tex")
+	os.system("convert "+os.getcwd()+"/latex.pdf "+os.getcwd()+"/latex.png")
 	##
 	r.setUI2(paintEvent(QtGui.QWidget,listGui3,style_s,style_g))
 	r.showF2()

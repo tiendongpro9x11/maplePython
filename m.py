@@ -8,7 +8,6 @@
 
 from PyQt4 import QtCore, QtGui,QtXml
 import os
-import popplerqt4
 import platform
 from maple import maple
 
@@ -64,10 +63,10 @@ class Ui_Form(object):
 		os.system(MAPLEDIR+" "+os.getcwd()+"/rungrap.mpl")
 
 	def readpdffile(self):
-		doc = popplerqt4.Poppler.Document.load(os.getcwd()+"/latex.pdf")
-		doc.setRenderHint(popplerqt4.Poppler.Document.Antialiasing)
-		doc.setRenderHint(popplerqt4.Poppler.Document.TextAntialiasing)
-		page = doc.page(0)
-		image = page.renderToImage(75,75)
-		self.label.setPixmap(QtGui.QPixmap.fromImage(image))
+		# doc = popplerqt4.Poppler.Document.load(os.getcwd()+"/latex.pdf")
+		# doc.setRenderHint(popplerqt4.Poppler.Document.Antialiasing)
+		# doc.setRenderHint(popplerqt4.Poppler.Document.TextAntialiasing)
+		# page = doc.page(0)
+		# image = page.renderToImage(75,75)
+		self.label.setPixmap(QtGui.QPixmap(os.getcwd()+"/latex.png"))
 		self.area.setWidget(self.label)
