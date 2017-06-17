@@ -92,7 +92,8 @@ class Ui_Form(object):
 		s = r'$'+toLatex.py2tex("a*x**4+b*x**2+c")+'$'
 		self.label_4.setPixmap(QtGui.QPixmap(mathTex_to_QPixmap(s,10)))
 		##
-		self.pushButton.clicked.connect(self.showdialog)
+		self.pushButton.clicked.connect(self.showdialog_1)
+		self.pushButton_2.clicked.connect(self.showdialog_2)
 		##
 		self.pushButton_5 = QtGui.QPushButton(Form)
 		self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
@@ -129,16 +130,25 @@ class Ui_Form(object):
 			F.write(MAPLEDIR)
 		self.gridLayoutWidget.show()
 	#run dialog
-	def showdialog(self):
+	def showdialog_1(self):
 		r.hideF1()
 		Form = QtGui.QDialog()
 		ui = Ui_Dialog()
-		ui.setupUi(Form)
+		ui.setupUi(Form,1)
+		Form.show()
+		Form.exec_()
+	def showdialog_2(self):
+		r.hideF1()
+		Form = QtGui.QDialog()
+		ui = Ui_Dialog()
+		ui.setupUi(Form,2)
 		Form.show()
 		Form.exec_()
 
 class Ui_Dialog(object):
-	def setupUi(self, Dialog):
+	# def __init__(self):
+
+	def setupUi(self, Dialog,style=1):
 		Dialog.setObjectName(_fromUtf8("Dialog"))
 		Dialog.resize(508, 166)
 		Dialog.setStyleSheet(_fromUtf8("background-color:  rgb(255, 255, 255);"))
@@ -201,6 +211,11 @@ class Ui_Dialog(object):
 
 		self.buttonBox.setStyleSheet(_fromUtf8("background-color: black;color:white;"))
 
+		self.style = style
+		##
+		if style==2:
+			self.label_5.hide()
+			self.lineEdit_5.hide()
 	def retranslateUi(self, Dialog):
 		Dialog.setWindowTitle(_translate("Dialog", "Dialog", None))
 		self.label.setText(_translate("Dialog", "a", None))
@@ -230,18 +245,25 @@ class Ui_Dialog(object):
 		if not self.lineEdit_5.text().isEmpty():
 			shots = int(self.lineEdit_5.text())
 			l.append(shots)
-		if len(l) < 5:
-			print "Input again."
-			r.showF1()
-		else:
-			exe(l)
+		if self.style == 1:
+			if len(l) < 5:
+				print "Input again."
+				r.showF1()
+			else:
+				exe(l)
+		elif self.style == 2:
+			if len(l) < 4:
+				r.showF1()
+			else:
+				exe(l,2)
+
 #run after click ok
-def exe(l):
+def exe(l,style_main=1):
 
 	r.hideF1()
-	if l[0] > 0:
+	if l[0]*l[3] > 0:
 		style_g = 1
-	elif l[0] < 0:
+	elif l[0]*l[3] < 0:
 		style_g = 2
 	s = '(('+str(l[0])+')*x^2+('+str(l[1])+')*x+('+str(l[2])+'))/(('+str(l[3])+')*x+('+str(l[4])+'))' #y = (x^2+x+1)/(x+1)
 	par1 = maple(s+';') #loai bo so 1

@@ -1,15 +1,13 @@
-Run-362: $y=\frac{x^{2} + 2 \; x + 3}{2 \; x - 1}$
-Run-362: $R\backslash\left\{\frac{1}{2}\right\}$
-Run-362: $y=\frac{1}{2} \; x + \frac{5}{4}+\frac{17}{8 \; x - 4}$
+Run-362: $y=\frac{x^{2} - 2 \; x - 3}{x - 2}$
+Run-362: $R\backslash\left\{2\right\}$
+Run-362: $y=x+\frac{-3}{x - 2}$
 Run-362: $\lim_{x\to -\infty }y=-\infty$
 Run-362: $\lim_{x\to+\infty }y=+\infty$
-Run-362: $\lim_{x\to(\frac{1}{2})^{-} }y=-\infty$
-Run-362: $\lim_{x\to(\frac{1}{2})^{+} }y=+\infty$
-Run-362: $x=\frac{1}{2}$
-Run-362: $x\to(\frac{1}{2})^{-}$
-Run-362: $x\to(\frac{1}{2})^{+}$
-Run-362: $\lim_{x\to\infty}(\frac{17}{8 \; x - 4})=0$
-Run-362: $y=\frac{1}{2} \; x + \frac{5}{4}$
-Run-362: $\frac{2 \; x^{2} - 2 \; x - 8}{\left(2 \; x - 1\right)^{2}}$
-Run-362: $\frac{1}{2} - \frac{1}{2} \; \sqrt{17}$
-Run-362: $\frac{1}{2} + \frac{1}{2} \; \sqrt{17}$
+Run-362: $\lim_{x\to(2)^{-} }y=-\infty$
+Run-362: $\lim_{x\to(2)^{+} }y=+\infty$
+Run-362: $x=2$
+Run-362: $x\to(2)^{-}$
+Run-362: $x\to(2)^{+}$
+Run-362: $\lim_{x\to\infty}(\frac{-3}{x - 2})=0$
+Run-362: $y=x$
+Run-362: $\frac{x^{2} - 4 \; x + 7}{\left(x - 2\right)^{2}}$
