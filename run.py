@@ -255,10 +255,106 @@ class Ui_Dialog(object):
 			if len(l) < 4:
 				r.showF1()
 			else:
-				exe(l,2)
+				exe_2(l)
 
 #run after click ok
-def exe(l,style_main=1):
+def exe_2(l):
+	r.hideF1()
+	if l[0]*l[2] > 0:
+		style_g = 1
+	elif l[0]*l[2] < 0:
+		style_g = 2
+	else:
+		print "Error a or c equal 0"
+	s = '(('+str(l[0])+')*x+('+str(l[1])+'))/(('+str(l[2])+')*x+('+str(l[3])+'))'
+	par1 = maple(s+";")
+	par1 = par1.replace("^","**")
+	listGui2 = []
+	listGui3 = []
+
+	par1 = r'$y='+toLatex.py2tex(par1)+r'$'
+	listGui2.append(par1) #0
+	
+	par_0 = toLatex.py2tex(maple('solve(('+str(l[2])+')*x+('+str(l[3])+'));'))
+	listGui3.append(r'$'+par_0+r'$') #GUI #1
+	par1 = r'$R\backslash\left\{'+par_0+r'\right\}$'
+	listGui2.append(par1) #1
+	if style_g==1:
+		par1 = r'$\lim_{x\to('+par_0+r')^{-} }y=-\infty$'
+		listGui2.append(par1) #2
+		par1 = r'$\lim_{x\to('+par_0+r')^{+} }y=+\infty$'
+		listGui2.append(par1) #3
+	else:
+		par1 = r'$\lim_{x\to('+par_0+r')^{-} }y=+\infty$'
+		listGui2.append(par1) #2
+		par1 = r'$\lim_{x\to('+par_0+r')^{+} }y=-\infty$'
+		listGui2.append(par1) #3
+	##
+	par1 = r'$x='+par_0+r'$'
+	listGui2.append(par1) #4
+	par1 = r'$x\to('+par_0+r')^{-}$'
+	listGui2.append(par1) #5
+	par1 = r'$x\to('+par_0+r')^{+}$'
+	listGui2.append(par1) #6
+
+	par2 = maple("("+str(l[0])+r")/("+str(l[2])+");")
+	s1 = par2#dat truoc khi to latex
+	par2 = toLatex.py2tex(par2)
+	listGui3.append(r"$"+par2+r"$")
+	par1 = r'$\lim_{x\to -\infty}y =\lim_{x\to +\infty}y='+par2+r'$'
+	listGui2.append(par1) #7
+	par1 = r'$y='+par2+r'$' 
+	
+	listGui2.append(par1) #8
+	par1 = maple("diff("+s+",x):simplify(%);")
+	if l[0]*l[3] - l[1]*l[2] > 0:
+		cp = r">"
+		style_g = 1
+	else:
+		cp = r"<"
+		style_g = 2
+	par2 = r'$'+toLatex.py2tex(par1.replace("^","**"))+r'$'+cp+r'0 với mọi x $\neq'+par_0 +r"$"
+	listGui2.append(par2)
+	##
+	content = r'''\documentclass[17pt]{extarticle}
+\setlength{\parindent}{0pt}
+\usepackage[utf8]{vietnam}
+\thispagestyle{empty}
+\begin{document}
+\everymath{\displaystyle}
+'''
+	content += r'''$\star$ Khảo sát và vẽ đồ thì hàm số: \\
+{0}\\
+ Hàm số đã cho có tập xác định là: {1}\\
+ Ta có {2} và {3}  do đó đường thẳng {4} \\
+là tiệm cận đứng của đồ thị hàm số đã cho \\
+khi {5} và {6} \\
+ Vì {7} nên đường thẳng {8} là tiệm cận là \\
+tiệm cận ngang của đồ thị hàm số đã cho khi \\
+$x\to+\infty$ và $x\to-\infty$\\ 
+$\star$ Bảng biến thiên:\\
+ Ta có: y'={9} \\
+'''.format(listGui2[0],listGui2[1],listGui2[2],listGui2[3],listGui2[4],listGui2[5],listGui2[6],listGui2[7],listGui2[8],listGui2[9])
+	with open(os.getcwd()+"/latex.tex","w") as F:
+		F.write(content+"\end{document}")
+	os.system("pdflatex "+os.getcwd()+"/latex.tex")
+	os.system("pdfcrop "+os.getcwd()+"/latex.pdf")
+	os.system("convert "+os.getcwd()+"/latex-crop.pdf "+os.getcwd()+"/latex.png")
+	##
+	style_s = 2
+	r.setUI2(paintEvent(QtGui.QWidget,listGui3,style_s,style_g,2))
+	r.showF2()
+	#write on run graph
+	with open(os.getcwd()+"/rungrap.mpl","w") as F:
+		content_F = r'''plotsetup(default):
+interface(plotdevice):
+plotsetup(tek,kermit):
+plotsetup(ps,plotoutput=`plot.ps`,plotoptions=`portrait, noborder, width=1000, height=500`):
+plotsetup(x11):
+plotsetup(maplet):
+plot([{0},{1}],x,color=["Red","Red"]);'''.format(s,s1)
+		F.write(content_F)
+def exe(l):
 
 	r.hideF1()
 	if l[0]*l[3] > 0:
@@ -322,10 +418,7 @@ def exe(l,style_main=1):
 	par2 = par2[0]+')' #par2 := (x^2+x+1)
 	par2 = maple('solve('+par2+');')
 	par2 = par2.split(',')
-	# with open(os.getcwd()+"/file.log","w") as F:
-	# 	for x in listGui2:
-	# 		F.write("Run-300: "+str(x)+"\n")
-	#print "p"+par2[0]
+
 	par_3 = maple('if type(evalf('+par2[0]+'),float) then 0 else 1 fi;')  #co nghiem hay ko
 	#print "p"+par_3
 	if int(par_3) != 1: #neu co nghiem
@@ -350,9 +443,7 @@ def exe(l,style_main=1):
 		par5 = r'$'+toLatex.py2tex(par5)+r'$'
 		listGui3.append(par5) #GUI3 #3
 	##
-	# with open(os.getcwd()+"/file.log","w") as F:
-	# 	for x in listGui3:
-	# 		F.write("Run-300: "+str(x)+"\n")
+
 	par1 = r'$'+toLatex.py2tex(par1)+r'$'
 	listGui2.append(par1) #12
 	#giai phuogn trinh dao ham
@@ -392,7 +483,7 @@ def exe(l,style_main=1):
 	content = r'''\documentclass[17pt]{extarticle}
 \setlength{\parindent}{0pt}
 \usepackage[utf8]{vietnam}
-\usepackage[paperheight=6.6in,paperwidth=8.5in,margin=2pt]{geometry}
+\thispagestyle{empty}
 \begin{document}
 \everymath{\displaystyle}
 '''
@@ -415,7 +506,8 @@ $\star$ Bảng biến thiên:\\
 	with open(os.getcwd()+"/latex.tex","w") as F:
 		F.write(content+"\end{document}")
 	os.system("pdflatex "+os.getcwd()+"/latex.tex")
-	os.system("convert "+os.getcwd()+"/latex.pdf "+os.getcwd()+"/latex.png")
+	os.system("pdfcrop "+os.getcwd()+"/latex.pdf")
+	os.system("convert "+os.getcwd()+"/latex-crop.pdf "+os.getcwd()+"/latex.png")
 	##
 	r.setUI2(paintEvent(QtGui.QWidget,listGui3,style_s,style_g))
 	r.showF2()

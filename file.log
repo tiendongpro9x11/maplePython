@@ -1,15 +1,15 @@
-Run-362: $y=\frac{3 \; x^{2} + 2 \; x + 1}{2 \; x + 3}$
-Run-362: $R\backslash\left\{\frac{-3}{2}\right\}$
-Run-362: $y=\frac{3}{2} \; x - \frac{5}{4}+\frac{19}{8 \; x + 12}$
+Run-362: $y=\frac{2 \; x^{2} + 2 \; x + 3}{x + 2}$
+Run-362: $R\backslash\left\{-2\right\}$
+Run-362: $y=2 \; x - 2+\frac{7}{x + 2}$
 Run-362: $\lim_{x\to -\infty }y=-\infty$
 Run-362: $\lim_{x\to+\infty }y=+\infty$
-Run-362: $\lim_{x\to(\frac{-3}{2})^{-} }y=-\infty$
-Run-362: $\lim_{x\to(\frac{-3}{2})^{+} }y=+\infty$
-Run-362: $x=\frac{-3}{2}$
-Run-362: $x\to(\frac{-3}{2})^{-}$
-Run-362: $x\to(\frac{-3}{2})^{+}$
-Run-362: $\lim_{x\to\infty}(\frac{19}{8 \; x + 12})=0$
-Run-362: $y=\frac{3}{2} \; x - \frac{5}{4}$
-Run-362: $\frac{6 \; x^{2} + 18 \; x + 4}{\left(2 \; x + 3\right)^{2}}$
-Run-362: $\frac{-3}{2} - \frac{1}{6} \; \sqrt{57}$
-Run-362: $\frac{-3}{2} + \frac{1}{6} \; \sqrt{57}$
+Run-362: $\lim_{x\to(-2)^{-} }y=-\infty$
+Run-362: $\lim_{x\to(-2)^{+} }y=+\infty$
+Run-362: $x=-2$
+Run-362: $x\to(-2)^{-}$
+Run-362: $x\to(-2)^{+}$
+Run-362: $\lim_{x\to\infty}(\frac{7}{x + 2})=0$
+Run-362: $y=2 \; x - 2$
+Run-362: $\frac{2 \; x^{2} + 8 \; x + 1}{\left(x + 2\right)^{2}}$
+Run-362: $-2 - \frac{1}{2} \; \sqrt{14}$
+Run-362: $-2 + \frac{1}{2} \; \sqrt{14}$

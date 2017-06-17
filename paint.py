@@ -3,7 +3,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from mathTex2Pixmap import mathTex_to_QPixmap
 
-def paintEvent(QWidget,control,style_s=1,style_g=1):
+def paintEvent(QWidget,control,style_s=1,style_g=1,style_main=1):
 
 	img = QImage(500,200,QImage.Format_ARGB32_Premultiplied)
 	qp = QPainter()
@@ -55,16 +55,28 @@ def paintEvent(QWidget,control,style_s=1,style_g=1):
 			qp.drawPixmap(E[0]+3,D[1]+10,mathTex_to_QPixmap(latex,10)) #type 2
 			qp.drawPixmap(I[0]-25,D[1]+10,mathTex_to_QPixmap(latex,10))
 	elif style_s==2:
-		latex = r'-$\infty$'
-		if style_g==1:
-			qp.drawPixmap(E[0]+3,F[1]-10,mathTex_to_QPixmap(latex,10)) #type 1
-			latex = r'+$\infty$'
-			qp.drawPixmap(I[0]-25,D[1]+10,mathTex_to_QPixmap(latex,10))
-		elif style_g==2:
-			latex = r'+$\infty$'
-			qp.drawPixmap(E[0]+3,D[1]+10,mathTex_to_QPixmap(latex,10))
-			latex = r'-$\infty$'
-			qp.drawPixmap(I[0]-25,F[1]-10,mathTex_to_QPixmap(latex,10))
+		if style_main==1:
+			if style_g==1:
+				latex = r'-$\infty$'
+				qp.drawPixmap(E[0]+3,F[1]-10,mathTex_to_QPixmap(latex,10)) #type 1
+				latex = r'+$\infty$'
+				qp.drawPixmap(I[0]-25,D[1]+10,mathTex_to_QPixmap(latex,10))
+			elif style_g==2:
+				latex = r'+$\infty$'
+				qp.drawPixmap(E[0]+3,D[1]+10,mathTex_to_QPixmap(latex,10))
+				latex = r'-$\infty$'
+				qp.drawPixmap(I[0]-25,F[1]-10,mathTex_to_QPixmap(latex,10))
+		elif style_main==2:
+			if style_g==1:
+				latex = r'-$\infty$'
+				qp.drawPixmap(E[0]+3,F[1]-10,mathTex_to_QPixmap(latex,10)) #type 1
+				latex = control[1]
+				qp.drawPixmap(I[0]-25,D[1]+10,mathTex_to_QPixmap(latex,10))
+			elif style_g==2:
+				latex = r'+$\infty$'
+				qp.drawPixmap(E[0]+3,D[1]+10,mathTex_to_QPixmap(latex,10))
+				latex = control[1]
+				qp.drawPixmap(I[0]-25,F[1]-10,mathTex_to_QPixmap(latex,10))
 
 	latex = r'+$\infty$'
 	qp.drawPixmap(D[0]-18,posx[1]-10,mathTex_to_QPixmap(latex,10)) # + Vo cung
@@ -78,17 +90,28 @@ def paintEvent(QWidget,control,style_s=1,style_g=1):
 			qp.drawPixmap(I[0],D[1]+10,mathTex_to_QPixmap(latex,10)) #type 1
 			qp.drawPixmap(D[0]-18,D[1]+10,mathTex_to_QPixmap(latex,10)) #bang line 3
 	elif style_s==2:
-		
-		if style_g==1:
-			latex = r'-$\infty$'
-			qp.drawPixmap(I[0],F[1]-10,mathTex_to_QPixmap(latex,10))
-			latex = r'+$\infty$'
-			qp.drawPixmap(D[0]-18,D[1]+10,mathTex_to_QPixmap(latex,10))
-		elif style_g==2:
-			latex = r'+$\infty$'
-			qp.drawPixmap(I[0],D[1]+10,mathTex_to_QPixmap(latex,10))
-			latex = r'-$\infty$'
-			qp.drawPixmap(D[0]-18,F[1]-10,mathTex_to_QPixmap(latex,10))
+		if style_main==1:
+			if style_g==1:
+				latex = r'-$\infty$'
+				qp.drawPixmap(I[0],F[1]-10,mathTex_to_QPixmap(latex,10))
+				latex = r'+$\infty$'
+				qp.drawPixmap(D[0]-18,D[1]+10,mathTex_to_QPixmap(latex,10))
+			elif style_g==2:
+				latex = r'+$\infty$'
+				qp.drawPixmap(I[0],D[1]+10,mathTex_to_QPixmap(latex,10))
+				latex = r'-$\infty$'
+				qp.drawPixmap(D[0]-18,F[1]-10,mathTex_to_QPixmap(latex,10))
+		elif style_main==2:
+			if style_g==1:
+				latex = control[1]
+				qp.drawPixmap(I[0],F[1]-10,mathTex_to_QPixmap(latex,10))
+				latex = r'+$\infty$'
+				qp.drawPixmap(D[0]-18,D[1]+10,mathTex_to_QPixmap(latex,10))
+			elif style_g==2:
+				latex = control[1]
+				qp.drawPixmap(I[0],D[1]+10,mathTex_to_QPixmap(latex,10))
+				latex = r'-$\infty$'
+				qp.drawPixmap(D[0]-18,F[1]-10,mathTex_to_QPixmap(latex,10))
 
 	midXIE = (I[0]+E[0])/2
 	midXID = (I[0]+D[0])/2
