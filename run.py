@@ -109,7 +109,6 @@ class Ui_Form(object):
 			self.pushButton_5.hide()
 		
 	def retranslateUi(self, Form):
-		
 		Form.setWindowTitle(_translate("Form", "Form", None))
 		self.pushButton_3.setText(_translate("Form", "Select", None))
 		self.pushButton_4.setText(_translate("Form", "Select", None))

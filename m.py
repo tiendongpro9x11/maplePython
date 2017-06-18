@@ -56,8 +56,9 @@ class Ui_Form(object):
 		self.label_2.setGeometry(QtCore.QRect(10, im.height(), 500, 200))
 		self.label_2.setPixmap(QtGui.QPixmap(y))
 	def showgraph(self):
-		if platform.system() != "Linux":
+		if platform.system() == "Windows":
 			MAPLEDIR = "cmaple"
-		with open(os.getcwd()+"/linkmaple.txt") as F:
-			MAPLEDIR = F.readline()
+		elif platform.system() == "Linux":
+			with open(os.getcwd()+"/linkmaple.txt") as F:
+				MAPLEDIR = F.readline()
 		os.system(MAPLEDIR+" "+os.getcwd()+"/rungrap.mpl")
